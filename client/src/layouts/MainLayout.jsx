@@ -1,5 +1,6 @@
 import Navbar from "../Components/layout/Navbar";
 import Footer from "../Components/layout/Footer";
+import { Outlet } from "react-router-dom";
 
 function MainLayout() {
   return (
@@ -7,8 +8,7 @@ function MainLayout() {
       <Navbar />
 
       <main>
-        <h1>Expense Tracker & Budget Manager</h1>
-        <p>Welcome to the application.</p>
+        <Outlet />
       </main>
 
       <Footer />
