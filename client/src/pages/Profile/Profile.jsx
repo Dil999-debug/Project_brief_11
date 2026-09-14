@@ -1,11 +1,20 @@
-function Profile() {
+import PageTitle from "../../Components/ui/PageTitle";
+import Card from "../../Components/ui/Card";
+import Button from "../../Components/ui/Button";
+
+function Login() {
   return (
     <div>
-      <h1>Profile</h1>
-      <h2>User Profile</h2>
-      <p>This is the profile page.</p>
+      <PageTitle title="Login" />
+
+      <Card
+        title="Welcome Back"
+        description="Login to access your expense tracker account."
+      />
+
+      <Button text="Login" />
     </div>
   );
 }
 
-export default Profile;
+export default Login;

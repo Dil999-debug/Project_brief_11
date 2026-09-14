@@ -1,7 +1,8 @@
 function Footer() {
   return (
     <footer>
-      <p>© 2026 Expense Tracker & Budget Manager</p>
+      <p>Expense Tracker & Budget Manager</p>
+      <p>© {new Date().getFullYear()} Expense Tracker</p>
     </footer>
   );
 }

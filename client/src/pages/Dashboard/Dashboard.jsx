@@ -1,9 +1,18 @@
+import PageTitle from "../../Components/ui/PageTitle";
+import Card from "../../Components/ui/Card";
+import Button from "../../Components/ui/Button";
+
 function Dashboard() {
   return (
     <div>
-      <h1>Dashboard</h1>
-      <h2>Financial Overview</h2>
-      <p>This is the dashboard page.</p>
+      <PageTitle title="Dashboard" />
+
+      <Card
+        title="Financial Overview"
+        description="View your income, expenses and budget summary."
+      />
+
+      <Button text="View Expenses" />
     </div>
   );
 }

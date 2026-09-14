@@ -1,9 +1,18 @@
+import PageTitle from "../../Components/ui/PageTitle";
+import Card from "../../Components/ui/Card";
+import Button from "../../Components/ui/Button";
+
 function Home() {
   return (
     <div>
-      <h1>Home</h1>
-      <h2>Welcome to Expense Tracker</h2>
-      <p>This is the home page.</p>
+      <PageTitle title="Home" />
+
+      <Card
+        title="Welcome to Expense Tracker"
+        description="Manage your income, expenses and budget easily."
+      />
+
+      <Button text="Get Started" />
     </div>
   );
 }
