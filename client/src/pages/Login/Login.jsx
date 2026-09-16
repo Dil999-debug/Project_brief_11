@@ -1,9 +1,20 @@
+import PageTitle from "../../Components/ui/PageTitle";
+import Card from "../../Components/ui/Card";
+import Button from "../../Components/ui/Button";
+
 function Login() {
   return (
     <div>
-      <h1>Login</h1>
-      <h2>Welcome Back</h2>
-      <p>This is the login page.</p>
+      <PageTitle title="Login" />
+
+      <div className="card-container">
+        <Card
+          title="Welcome Back"
+          description="Login to access your expense tracker account."
+        />
+      </div>
+
+      <Button text="Login" />
     </div>
   );
 }

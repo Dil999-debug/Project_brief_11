@@ -2,19 +2,26 @@ import PageTitle from "../../Components/ui/PageTitle";
 import Card from "../../Components/ui/Card";
 import Button from "../../Components/ui/Button";
 
-function Login() {
+function Profile() {
   return (
     <div>
-      <PageTitle title="Login" />
+      <PageTitle title="Profile" />
 
-      <Card
-        title="Welcome Back"
-        description="Login to access your expense tracker account."
-      />
+      <div className="card-container">
+        <Card
+          title="User Profile"
+          description="View your profile information."
+        />
 
-      <Button text="Login" />
+        <Card
+          title="Account Settings"
+          description="Manage your account settings."
+        />
+      </div>
+
+      <Button text="Edit Profile" />
     </div>
   );
 }
 
-export default Login;
+export default Profile;

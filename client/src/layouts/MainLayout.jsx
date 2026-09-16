@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 function MainLayout() {
   return (
-    <div>
+    <div className="app-layout">
       <Navbar />
 
       <main>
