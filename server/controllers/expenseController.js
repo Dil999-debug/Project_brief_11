@@ -1,109 +1,119 @@
-let expenses = [];
-let nextId = 1;
+
+const Expense = require("../models/Expense");
 
 // GET: Retrieve all expenses
-const getExpenses = (req, res) => {
-  res.status(200).json(expenses);
+const getExpenses = async (req, res) => {
+  try {
+    const expenses = await Expense.find().sort({ createdAt: -1 });
+
+    res.status(200).json(expenses);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve expenses" });
+  }
 };
 
 // GET: Retrieve one expense by ID
-const getExpenseById = (req, res) => {
-  const expense = expenses.find(
-    (item) => item.id === Number(req.params.id)
-  );
+const getExpenseById = async (req, res) => {
+  try {
+    const expense = await Expense.findById(req.params.id);
 
-  if (!expense) {
-    return res.status(404).json({ message: "Expense not found" });
+    if (!expense) {
+      return res.status(404).json({ message: "Expense not found" });
+    }
+
+    res.status(200).json(expense);
+  } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(400).json({ message: "Invalid expense ID" });
+    }
+
+    res.status(500).json({ message: "Failed to retrieve expense" });
   }
-
-  res.status(200).json(expense);
 };
 
 // POST: Create a new expense
-const createExpense = (req, res) => {
-  const { amount, category, description } = req.body;
+const createExpense = async (req, res) => {
+  try {
+    const { title, amount, category, date, paymentMethod, notes } = req.body;
 
-  if (
-    amount === undefined ||
-    amount === null ||
-    amount === "" ||
-    !category ||
-    !description ||
-    !Number.isFinite(Number(amount)) ||
-    Number(amount) <= 0
-  ) {
-    return res.status(400).json({
-      message: "Please provide a valid amount, category, and description."
+    const expense = await Expense.create({
+      title,
+      amount,
+      category,
+      date,
+      paymentMethod,
+      notes,
     });
+
+    res.status(201).json({
+      message: "Expense created successfully",
+      expense,
+    });
+  } catch (error) {
+    if (error.name === "ValidationError" || error.name === "CastError") {
+      return res.status(400).json({
+        message: "Invalid expense data",
+        error: error.message,
+      });
+    }
+
+    res.status(500).json({ message: "Failed to create expense" });
   }
-
-  const newExpense = {
-    id: nextId++,
-    amount: Number(amount),
-    category,
-    description
-  };
-
-  expenses.push(newExpense);
-
-  res.status(201).json({
-    message: "Expense created successfully",
-    expense: newExpense
-  });
 };
 
 // PUT: Update an existing expense
-const updateExpense = (req, res) => {
-  const expense = expenses.find(
-    (item) => item.id === Number(req.params.id)
-  );
+const updateExpense = async (req, res) => {
+  try {
+    const expense = await Expense.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+        omitUndefined: true,
+      }
+    );
 
-  if (!expense) {
-    return res.status(404).json({ message: "Expense not found" });
-  }
+    if (!expense) {
+      return res.status(404).json({ message: "Expense not found" });
+    }
 
-  const { amount, category, description } = req.body;
-
-  if (
-    amount === undefined ||
-    amount === null ||
-    amount === "" ||
-    !category ||
-    !description ||
-    !Number.isFinite(Number(amount)) ||
-    Number(amount) <= 0
-  ) {
-    return res.status(400).json({
-      message: "Please provide a valid amount, category, and description."
+    res.status(200).json({
+      message: "Expense updated successfully",
+      expense,
     });
+  } catch (error) {
+    if (error.name === "ValidationError" || error.name === "CastError") {
+      return res.status(400).json({
+        message: "Invalid expense data or ID",
+        error: error.message,
+      });
+    }
+
+    res.status(500).json({ message: "Failed to update expense" });
   }
-
-  expense.amount = Number(amount);
-  expense.category = category;
-  expense.description = description;
-
-  res.status(200).json({
-    message: "Expense updated successfully",
-    expense
-  });
 };
 
 // DELETE: Remove an expense
-const deleteExpense = (req, res) => {
-  const index = expenses.findIndex(
-    (item) => item.id === Number(req.params.id)
-  );
+const deleteExpense = async (req, res) => {
+  try {
+    const expense = await Expense.findByIdAndDelete(req.params.id);
 
-  if (index === -1) {
-    return res.status(404).json({ message: "Expense not found" });
+    if (!expense) {
+      return res.status(404).json({ message: "Expense not found" });
+    }
+
+    res.status(200).json({
+      message: "Expense deleted successfully",
+      expense,
+    });
+  } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(400).json({ message: "Invalid expense ID" });
+    }
+
+    res.status(500).json({ message: "Failed to delete expense" });
   }
-
-  const deletedExpense = expenses.splice(index, 1)[0];
-
-  res.status(200).json({
-    message: "Expense deleted successfully",
-    expense: deletedExpense
-  });
 };
 
 module.exports = {
@@ -111,5 +121,5 @@ module.exports = {
   getExpenseById,
   createExpense,
   updateExpense,
-  deleteExpense
+  deleteExpense,
 };
