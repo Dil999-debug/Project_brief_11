@@ -1,16 +1,49 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+
+import {
+  getExpenses,
+  createExpense
+} from "../../services/expenseService";
 
 function Expense() {
+  // Form states
+  const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  // Message states
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  // Expense records
+  const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
+
+  // GET: Load expenses from MongoDB
+  useEffect(() => {
+    const loadExpenses = async () => {
+      try {
+        const data = await getExpenses();
+        setExpenses(data);
+      } catch (err) {
+        setFetchError("Unable to load expenses.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadExpenses();
+  }, []);
+
+  // POST: Add a new expense
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!amount || !category) {
-      setError("Amount and category are required.");
+    if (!title || !amount || !category) {
+      setError("Title, amount and category are required.");
       return;
     }
 
@@ -19,26 +52,40 @@ function Expense() {
       return;
     }
 
-    setError("");
+    try {
+      setError("");
+      setSuccess("");
 
-    console.log({
-      amount,
-      category,
-      description,
-    });
+      const newExpense = {
+        title,
+        amount: Number(amount),
+        category,
+        notes: description,
+      };
 
-    alert("Expense added successfully!");
+      const result = await createExpense(newExpense);
 
-    setAmount("");
-    setCategory("");
-    setDescription("");
+      setExpenses((prev) => [result.expense, ...prev]);
+
+      setSuccess("Expense added successfully!");
+
+      setTitle("");
+      setAmount("");
+      setCategory("");
+      setDescription("");
+    } catch (err) {
+      setError("Failed to add expense.");
+    }
   };
 
+  // Reset form
   const handleReset = () => {
+    setTitle("");
     setAmount("");
     setCategory("");
     setDescription("");
     setError("");
+    setSuccess("");
   };
 
   return (
@@ -46,6 +93,14 @@ function Expense() {
       <h2>Add Expense</h2>
 
       <form onSubmit={handleSubmit}>
+        <label>Title</label>
+        <input
+          type="text"
+          placeholder="Enter expense title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
         <label>Amount</label>
         <input
           type="number"
@@ -75,6 +130,7 @@ function Expense() {
         />
 
         {error && <p>{error}</p>}
+        {success && <p>{success}</p>}
 
         <button type="submit">Add Expense</button>
 
@@ -82,6 +138,27 @@ function Expense() {
           Reset
         </button>
       </form>
+
+      <hr />
+
+      <h2>Expense Records</h2>
+
+      {loading && <p>Loading expenses...</p>}
+      {fetchError && <p>{fetchError}</p>}
+
+      {!loading && !fetchError && expenses.length === 0 && (
+        <p>No expenses found.</p>
+      )}
+
+      {!loading && !fetchError && expenses.map((expense) => (
+        <div key={expense._id}>
+          <h3>{expense.title}</h3>
+          <p>Amount: ₹{expense.amount}</p>
+          <p>Category: {expense.category}</p>
+          <p>Notes: {expense.notes}</p>
+          <hr />
+        </div>
+      ))}
     </div>
   );
 }
