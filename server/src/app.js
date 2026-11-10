@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 
 const expenseRoutes = require("../routes/expenseRoutes");
+const budgetRoutes = require("../routes/budgetRoutes");
 const requestLogger = require("../middleware/requestLogger");
 
 app.use(cors({
@@ -18,5 +19,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/expenses", expenseRoutes);
+app.use("/api/budgets", budgetRoutes);
 
 module.exports = app;

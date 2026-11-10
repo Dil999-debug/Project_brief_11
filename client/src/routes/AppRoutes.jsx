@@ -1,7 +1,9 @@
+
 import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "../layouts/MainLayout";
 import Expense from "../pages/Expense/Expense";
+import Budget from "../pages/Budget/Budget";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
@@ -15,6 +17,7 @@ function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/expense" element={<Expense />} />
+        <Route path="/budget" element={<Budget />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
