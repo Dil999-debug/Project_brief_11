@@ -6,6 +6,7 @@ import Expense from "../pages/Expense/Expense";
 import Budget from "../pages/Budget/Budget";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
+import Register from "../pages/Register/Register";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Profile from "../pages/Profile/Profile";
 import NotFound from "../pages/NotFound/NotFound";
@@ -20,6 +21,7 @@ function AppRoutes() {
         <Route path="/budget" element={<Budget />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
